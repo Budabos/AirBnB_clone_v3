@@ -1,63 +1,34 @@
 #!/usr/bin/python3
-"""
-<<<<<<< HEAD
-This module contains endpoint(route) status
-"""
-from models import storage
-from flask import Flask
+'''
+    flask with general routes
+    routes:
+        /status:    display "status":"OK"
+        /stats:     dispaly total for all classes
+'''
 from api.v1.views import app_views
 from flask import jsonify
+from models import storage
 
 
-@app_views.route('/status', strict_slashes=False)
+@app_views.route("/status")
 def status():
-    """
-    Returns a JSON status
-    """
-    return jsonify({"status": "OK"})
+    '''
+        return JSON of OK status
+    '''
+    return jsonify({'status': 'OK'})
 
 
-@app_views.route('/stats', strict_slashes=False)
-def count():
-    """
-    Retrieves the number of each objects by type
-    """
-    return jsonify({"amenities": storage.count("Amenity"),
-                    "cities": storage.count("City"),
-                    "places": storage.count("Place"),
-                    "reviews": storage.count("Review"),
-                    "states": storage.count("State"),
-                    "users": storage.count("User")})
-=======
-module to generate json response
-"""
-
-from api.v1.views import app_views
-from flask import jsonify
-from models import storage
-from models.amenity import Amenity
-from models.base_model import BaseModel, Base
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
-import json
-
-classes = {"amenities": Amenity, "cities": City,
-        "places": Place, "reviews": Review, "states": State, "users": User}
-
-
-@app_views.route('/status', strict_slashes=False)
-def index():
-    response = {"status": "OK"}
-    return jsonify(response)
-
-
-@app_views.route('/stats', strict_slashes=False)
-def stats():
-    response = {}
-    for key, value in classes.items():
-        response[key] = storage.count(value)
-    return jsonify(response)
->>>>>>> master
+@app_views.route("/stats")
+def storage_counts():
+    '''
+        return counts of all classes in storage
+    '''
+    cls_counts = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User")
+    }
+    return jsonify(cls_counts)
